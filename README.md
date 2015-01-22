@@ -1,6 +1,8 @@
 # bip32-report
 Retrieves balances for n derivations of an HD public key (i.e. Trezor, Wallet32)
 
+![Screenshot of bip32-report](http://i.imgur.com/wRWOCYs.png)
+
 # Setup
 Run `npm install`
 
