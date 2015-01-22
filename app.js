@@ -32,7 +32,8 @@ try {
 
 var response = {
 	hdPublicKey : xpub,
-	addresses : []
+	addresses : [],
+	change : []
 }
 
 function getBalances() {
@@ -40,6 +41,9 @@ function getBalances() {
 
 		var req = [];
 		response.addresses.forEach(function (i, o) {
+			req.push(i.address);
+		});
+		response.change.forEach(function (i, o) {
 			req.push(i.address);
 		});
 
@@ -52,6 +56,11 @@ function getBalances() {
 					for(var j = 0; j < response.addresses.length; j++) {
 						if (utxos[i].address == response.addresses[j].address) {
 							response.addresses[j].balance = bitcore.Unit.fromSatoshis(utxos[i].satoshis).toBTC().toFixed(8);
+						}
+					}
+					for(var j = 0; j < response.change.length; j++) {
+						if (utxos[i].address == response.change[j].address) {
+							response.change[j].balance = bitcore.Unit.fromSatoshis(utxos[i].satoshis).toBTC().toFixed(8);
 						}
 					}
 				}
@@ -72,9 +81,22 @@ for(var i = 0; i < numDerivations; i++) {
 		address: address.toString(),
 		balance : 0
 	});
+
+	publicKey = pubKey.derive(1).derive(i).toObject().publicKey;
+	pk = new bitcore.PublicKey(publicKey);
+    address = pk.toAddress('livenet');
+	response.change.push({
+		address: address.toString(),
+		balance : 0
+	});
+
 }
 getBalances().then(function(item) {
-	var total = 0;
+	var total = 0,
+		changeTotal = 0;
+	console.log("---------------------------------------------------------------------");
+	console.log("\t\t\tDERIVED ADDRESSES");
+	console.log("---------------------------------------------------------------------");
 	console.log("Derivation\tAddress\t\t\t\t\tBalance (BTC)");
 	console.log("---------------------------------------------------------------------");
 	for(var i = 0; i < response.addresses.length; i++) {
@@ -83,6 +105,22 @@ getBalances().then(function(item) {
 	}
 	console.log("---------------------------------------------------------------------");
 	console.log("Total\t\t\t\t\t\t\t" + total.toFixed(8));
+
+
+	console.log("\n\n---------------------------------------------------------------------");
+	console.log("\t\t\tCHANGE ADDRESSES");
+	console.log("---------------------------------------------------------------------");
+	console.log("Derivation\tAddress\t\t\t\t\tBalance (BTC)");
+	console.log("---------------------------------------------------------------------");
+	for(var i = 0; i < response.change.length; i++) {
+		console.log(i + "\t\t" + response.change[i].address + "\t" + response.change[i].balance);
+		changeTotal += parseFloat(response.change[i].balance);
+	}
+	console.log("---------------------------------------------------------------------");
+	console.log("Total Change\t\t\t\t\t\t" + changeTotal.toFixed(8));
+
+	console.log("\n---------------------------------------------------------------------");
+	console.log("Grand Total\t\t\t\t\t\t" + (total + changeTotal).toFixed(8));
 }).catch(function(e) {
 	console.log("ERROR: " + e.message);
 });
