@@ -1,0 +1,29 @@
+{
+  "name": "bip32-report",
+  "version": "1.0.0",
+  "description": "Retrieves balances for n derivations of an HD public key (i.e. Trezor, Wallet32)",
+  "main": "app.js",
+  "dependencies": {
+    "bluebird": "^2.8.2",
+    "bitcore-explorers": "^0.9.0",
+    "bitcore": "^0.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkriddle/bip32-report.git"
+  },
+  "keywords": [
+    "bip32",
+    "bitcoin"
+  ],
+  "author": "Joshua Riddle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkriddle/bip32-report/issues"
+  },
+  "homepage": "https://github.com/jkriddle/bip32-report"
+}
